@@ -5,21 +5,20 @@
 #define PINO_BUZZER 21
 #define PINO_LED_VERDE 11
 
-// Função para fazer a musiquinha
 void tocar_nota(uint pino, uint frequencia, uint duracao_ms) {
     uint slice_num = pwm_gpio_to_slice_num(pino);
-    uint32_t clock_freq = 125000000; 
+    uint32_t clock_freq = 125000000;
     uint32_t divisor = clock_freq / frequencia / 4096 + 1;
     uint32_t top = clock_freq / (divisor * frequencia) - 1;
 
     pwm_set_clkdiv(slice_num, divisor);
     pwm_set_wrap(slice_num, top);
-    pwm_set_chan_level(slice_num, pwm_gpio_to_channel(pino), top / 2); 
+    pwm_set_chan_level(slice_num, pwm_gpio_to_channel(pino), top / 2);
     pwm_set_enabled(slice_num, true);
     
     sleep_ms(duracao_ms);
     pwm_set_enabled(slice_num, false);
-    sleep_ms(50); 
+    sleep_ms(50);
 }
 
 int main() {
@@ -27,6 +26,7 @@ int main() {
     
     gpio_init(PINO_LED_VERDE);
     gpio_set_dir(PINO_LED_VERDE, GPIO_OUT);
+
 
     gpio_set_function(PINO_BUZZER, GPIO_FUNC_PWM);
 
@@ -39,7 +39,6 @@ int main() {
         tocar_nota(PINO_BUZZER, 659, 150); 
         tocar_nota(PINO_BUZZER, 784, 150); 
         tocar_nota(PINO_BUZZER, 1046, 400); 
-
 
         gpio_put(PINO_LED_VERDE, 0);
         
